@@ -1,4 +1,5 @@
 import 'package:firstflutter/weatherapp/Models/Apimodels.dart';
+import 'package:firstflutter/weatherapp/UI/bottom_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +29,10 @@ class _WeatherBroadCastState extends State<WeatherBroadCast> {
     return Scaffold(
       body: ListView(
         children: <Widget>[
-          textInputField(),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: textInputField(),
+          ),
           FutureBuilder<WeatherForecastModel>(
               future: data,
               builder: (BuildContext context,
@@ -36,7 +40,8 @@ class _WeatherBroadCastState extends State<WeatherBroadCast> {
                  if(snapshot.hasData){
                    return Column(
                      children: <Widget>[
-                       midView(snapshot)
+                       midView(snapshot),
+                       getBottomView(snapshot, context)
                      ],
                    );
                  }else{
