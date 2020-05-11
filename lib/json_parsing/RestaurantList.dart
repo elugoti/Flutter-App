@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:firstflutter/model/Post.dart';
 import 'package:firstflutter/model/RestuarantResp.dart';
+import 'package:firstflutter/model/ReviewsResponse.dart';
+import 'package:firstflutter/ui/ListViewDialog.dart';
 import 'package:firstflutter/ui/ListViews.dart';
 import 'package:firstflutter/weatherapp/UI/RestaurantDetailPage.dart';
 import 'package:firstflutter/weatherapp/Utils/Utils.dart';
@@ -49,8 +51,7 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
   }
 
   Future<RestaurantResp> getData() {
-    String url =
-        "https://developers.zomato.com/api/v2.1/search?entity_id=259&entity_type=city&start=0&count=20";
+    String url = Utils.BASE_URL+"search?entity_id=259&entity_type=city&start=0&count=20";
     var data;
     Network network = new Network(url);
     data = network.fetchData();
@@ -69,12 +70,7 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                 Divider(height: 5.0),
                 ListTile(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RestaurantDetailPage(
-                                    restaurant: snapshot[positon].restaurant,
-                                  )));
+                     fetchMenu(snapshot[positon]);
                     },
                     leading: Column(
                       children: <Widget>[
@@ -128,6 +124,116 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
   }
 
   openRestaurantDetailPage(Restaurant restaurant, BuildContext context) {}
+
+  void fetchMenu(Restaurants snapshot) {
+    String url= Utils.BASE_URL + "reviews?res_id="+snapshot.restaurant.r.resId.toString()+"&start=0&count=20";
+    Network network = Network(url);
+    network.fetchReviews().then((onValue) => {
+        debugPrint(onValue.toString()),
+       _displayDialog(onValue.userReviews)
+    });
+
+  }
+
+  void showDialogView(List<UserReviews> userReviews) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title:  Text("Reviews"),
+          content: Container(
+            child: Column(
+              children: <Widget>[
+
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  _displayDialog(List<UserReviews> userReviews)  {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Reviews',style: TextStyle(color: Colors.blueGrey,fontSize: 18),),
+            content: Container(
+              width: double.maxFinite,
+              height: 500.0,
+              child: ListView(
+                padding: EdgeInsets.all(8.0),
+                //map List of our data to the ListView
+                children: userReviews.map((data) => reviewInfo(data)).toList(),
+              ),
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('CLOSE'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  Widget reviewInfo(UserReviews data) {
+    var user = data.review.user;
+    return Padding(
+      padding: const EdgeInsets.all(0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Image.network("${user.profileImage}",width: 40,height: 40,),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text("${user.name}",style: TextStyle(color: Colors.black54,fontWeight: FontWeight.bold,fontSize: 14),),
+                Container(
+                  width: MediaQuery.of(context).size.width*0.45,
+                  child:Text("${data.review.reviewText}",style: TextStyle(color: Colors.grey,fontSize: 12),maxLines: 3,overflow: TextOverflow.ellipsis,),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+Widget showReviewUI(BuildContext context, List<UserReviews> list) {
+
+  return Container(
+    child: ListView.builder(
+        itemCount: list.length,
+        itemBuilder: (context, int positon) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Divider(height: 5.0),
+              ListTile(
+                  title: Text("hello"),)
+            ],
+          );
+        }),
+  );
 }
 
 class Network {
@@ -141,6 +247,15 @@ class Network {
     if (response.statusCode == 200) {
       debugPrint(response.body);
       return RestaurantResp.fromJson(json.decode(response.body));
+    } else {
+      debugPrint("${response.statusCode}");
+    }
+  }
+  Future<ReviewsResponse> fetchReviews() async {
+    Response response = await get(Uri.parse(url), headers: headers);
+    if (response.statusCode == 200) {
+      debugPrint(response.body);
+      return ReviewsResponse.fromJson(json.decode(response.body));
     } else {
       debugPrint("${response.statusCode}");
     }
