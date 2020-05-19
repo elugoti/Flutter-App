@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:DeliverMyFood/delivermyfood/models/City.dart';
+import 'package:DeliverMyFood/delivermyfood/ui/CityGridView.dart';
 import 'package:DeliverMyFood/model/Post.dart';
 import 'package:DeliverMyFood/model/RestuarantResp.dart';
 import 'package:DeliverMyFood/model/ReviewsResponse.dart';
@@ -12,12 +14,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart';
 
-class RestaurantListScreen extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
   _RestaurantListScreenState createState() => _RestaurantListScreenState();
 }
 
-class _RestaurantListScreenState extends State<RestaurantListScreen> {
+class _RestaurantListScreenState extends State<HomePage> {
   Future<RestaurantResp> data;
 
   @override
@@ -136,54 +138,30 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
         {debugPrint(onValue.toString()), _displayDialog(onValue.userReviews)});
   }
 
-  void showDialogView(List<UserReviews> userReviews) {
-    // flutter defined function
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: Text("Reviews"),
-          content: Container(
-            child: Column(
-              children: <Widget>[],
-            ),
-          ),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            FlatButton(
-              child: new Text("Close"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   _displayDialog(List<UserReviews> userReviews) {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: Text(
-              'Reviews',
+              'City',
               style: TextStyle(color: Colors.blueGrey, fontSize: 18),
             ),
             content: Container(
-              width: double.maxFinite,
-              height: 500.0,
-              child: ListView(
-                padding: EdgeInsets.all(8.0),
-                //map List of our data to the ListView
-                children: userReviews.map((data) => reviewInfo(data)).toList(),
-              ),
-            ),
+                width: double.maxFinite,
+                height: 300.0,
+                child: GridView.count(
+                    crossAxisCount: 3,
+                    children: List.generate(cities.length, (index) {
+                      return Center(
+                        child: GestureDetector(
+                          onTap: ()=> debugPrint(cities[index].title),
+                            child: CityGridView(city: cities[index])),
+                      );
+                    }))),
             actions: <Widget>[
               new FlatButton(
-                child: new Text('CLOSE'),
+                child: new Text('SELECT'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },

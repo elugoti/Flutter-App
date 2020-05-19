@@ -1,9 +1,11 @@
-import 'package:firstflutter/json_parsing/RestaurantList.dart';
-import 'package:firstflutter/ui/LoginScreen.dart';
-import 'package:firstflutter/weatherapp/WeatherBroadCast.dart';
+
+import 'package:DeliverMyFood/delivermyfood/ui/HomePage.dart';
+import 'package:DeliverMyFood/json_parsing/RestaurantList.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'LoginScreen.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -26,11 +28,12 @@ class _LoginUserState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(future: _sharedPreferences,builder: (BuildContext context, AsyncSnapshot<SharedPreferences> snapshot) {
-      if(snapshot.hasData&&snapshot.data.getBool("islogin")!=null&&snapshot.data.getBool("islogin")){
-        return RestaurantListScreen();
-      }else{
-        return  LoginScreen();
-      }
+//      if(snapshot.hasData&&snapshot.data.getBool("islogin")!=null&&snapshot.data.getBool("islogin")){
+//
+//      }else{
+//        return  LoginScreen();
+//      }
+      return HomePage();
     },
 
     );

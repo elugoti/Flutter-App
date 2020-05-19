@@ -1,5 +1,5 @@
-import 'package:firstflutter/model/Question.dart';
-import 'package:firstflutter/utils/hexcolor.dart';
+import 'package:DeliverMyFood/model/Question.dart';
+import 'package:DeliverMyFood/utils/hexcolor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

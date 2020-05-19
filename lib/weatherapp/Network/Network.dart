@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:firstflutter/weatherapp/Models/Apimodels.dart';
-import 'package:firstflutter/weatherapp/Utils/Utils.dart';
+import 'package:DeliverMyFood/weatherapp/Models/Apimodels.dart';
+import 'package:DeliverMyFood/weatherapp/Utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 

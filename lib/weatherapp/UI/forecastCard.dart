@@ -1,6 +1,6 @@
-import 'package:firstflutter/weatherapp/Models/Apimodels.dart';
-import 'package:firstflutter/weatherapp/Utils/Utils.dart';
-import 'package:firstflutter/weatherapp/Utils/convertor_icon.dart';
+import 'package:DeliverMyFood/weatherapp/Models/Apimodels.dart';
+import 'package:DeliverMyFood/weatherapp/Utils/Utils.dart';
+import 'package:DeliverMyFood/weatherapp/Utils/convertor_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

@@ -1,4 +1,4 @@
-import 'package:firstflutter/model/Movie.dart';
+import 'package:DeliverMyFood/model/Movie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
