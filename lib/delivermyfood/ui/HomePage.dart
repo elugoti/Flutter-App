@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:DeliverMyFood/delivermyfood/models/City.dart';
 import 'package:DeliverMyFood/delivermyfood/ui/CityGridView.dart';
+import 'package:DeliverMyFood/delivermyfood/ui/SearchVenuePage.dart';
 import 'package:DeliverMyFood/model/Post.dart';
 import 'package:DeliverMyFood/model/RestuarantResp.dart';
 import 'package:DeliverMyFood/model/ReviewsResponse.dart';
@@ -19,14 +20,44 @@ class HomePage extends StatefulWidget {
   _RestaurantListScreenState createState() => _RestaurantListScreenState();
 }
 
-class _RestaurantListScreenState extends State<HomePage> {
+class _RestaurantListScreenState extends State<HomePage>
+    with WidgetsBindingObserver {
   Future<RestaurantResp> data;
+  List<String> name = new List();
+  List<int> colors = new List();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    //venueName = Utils.selectedVenue;
     data = getData();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print("came back");
+    if (state == AppLifecycleState.paused) {
+      // went to Background
+      print("going background");
+      setState(() {
+        //venueName = Utils.selectedVenue;
+      });
+    }
+    if (state == AppLifecycleState.resumed) {
+      // came back to Foreground
+      print("resumed");
+      setState(() {
+        //venueName = Utils.selectedVenue+", "+cityName;
+      });
+    }
   }
 
   @override
@@ -34,7 +65,34 @@ class _RestaurantListScreenState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xffCB202D),
-        title: Text("Restaurants"),
+        leading: new IconButton(
+          icon: new Icon(Icons.my_location),
+          onPressed: () {},
+        ),
+        title: Text(
+          Utils.selectedVenue,
+          style: (TextStyle(fontSize: 14)),
+        ),
+        actions: <Widget>[
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 0, top: 0, right: 20, bottom: 0),
+            child: IconButton(
+              icon: const Icon(Icons.edit),
+              tooltip: 'Show Snackbar',
+              onPressed: () {
+                if (Utils.city != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            SearchVenuePage(city: Utils.city)),
+                  );
+                }
+              },
+            ),
+          ),
+        ],
       ),
       body: Center(
         child: Container(
@@ -67,6 +125,10 @@ class _RestaurantListScreenState extends State<HomePage> {
       child: ListView.builder(
           itemCount: snapshot.length,
           itemBuilder: (context, int positon) {
+            String nm = "➕ ADD";
+            int color = 0xffCB202D;
+            name.add(nm);
+            colors.add(color);
             return Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -110,14 +172,19 @@ class _RestaurantListScreenState extends State<HomePage> {
                       ),
                     ),
                     trailing: Container(
-                      width: 50,
-                      color: Colors.green,
-                      child: Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: Text(
-                          "${snapshot[positon].restaurant.userRating.aggregateRating} ⭐",
-                          style: TextStyle(color: Colors.white),
-                        ),
+                      width: 100,
+                      child: FlatButton(
+                        onPressed: () {
+                          setState(() {
+                            //name.insert(positon, element)
+                            name[positon] = "✔ Added";
+                            colors[positon] = 0xff0080ff;
+                          });
+                        },
+                        child: Text(name[positon]),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                            side: BorderSide(color: Color(colors[positon]))),
                       ),
                     )),
               ],
@@ -133,19 +200,17 @@ class _RestaurantListScreenState extends State<HomePage> {
         "reviews?res_id=" +
         snapshot.restaurant.r.resId.toString() +
         "&start=0&count=20";
-    Network network = Network(url);
-    network.fetchReviews().then((onValue) =>
-        {debugPrint(onValue.toString()), _displayDialog(onValue.userReviews)});
+    _displayDialog();
   }
 
-  _displayDialog(List<UserReviews> userReviews) {
+  _displayDialog() {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: Text(
-              'City',
-              style: TextStyle(color: Colors.blueGrey, fontSize: 18),
+              'Selecy Your City',
+              style: TextStyle(color: Colors.redAccent, fontSize: 14),
             ),
             content: Container(
                 width: double.maxFinite,
@@ -155,17 +220,18 @@ class _RestaurantListScreenState extends State<HomePage> {
                     children: List.generate(cities.length, (index) {
                       return Center(
                         child: GestureDetector(
-                          onTap: ()=> debugPrint(cities[index].title),
+                            onTap: () => openVenueSearch(
+                                cities[index], Navigator.of(context)),
                             child: CityGridView(city: cities[index])),
                       );
                     }))),
             actions: <Widget>[
-              new FlatButton(
-                child: new Text('SELECT'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
+//              new FlatButton(
+//                child: new Text(''),
+//                onPressed: () {
+//                  Navigator.of(context).pop();
+//                },
+//              )
             ],
           );
         });
@@ -210,6 +276,15 @@ class _RestaurantListScreenState extends State<HomePage> {
           )
         ],
       ),
+    );
+  }
+
+  openVenueSearch(City city, NavigatorState of) {
+    of.pop();
+    //cityName = city.title;
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SearchVenuePage(city: city)),
     );
   }
 }
