@@ -7,6 +7,8 @@ class Utils{
   static String BASE_URL = "https://developers.zomato.com/api/v2.1/";
   static String selectedVenue = "Select Venue";
   static City city ;
+  static int selectedFoodType = 1;
+
 
   static String getDate(DateTime dateTime){
     return new DateFormat("EEEE, MMM d, y").format(dateTime);
