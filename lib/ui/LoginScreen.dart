@@ -1,4 +1,5 @@
 import 'package:DeliverMyFood/json_parsing/RestaurantList.dart';
+import 'package:DeliverMyFood/ui/PaymentScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -40,7 +41,7 @@ class _State extends State<LoginScreen> {
                     alignment: Alignment.center,
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      'Welcome',
+                      'Login',
                       style: TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.w500,
@@ -94,7 +95,7 @@ class _State extends State<LoginScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            RestaurantListScreen()))
+                                            PaymentScreen()))
                               });
                         }
                       },

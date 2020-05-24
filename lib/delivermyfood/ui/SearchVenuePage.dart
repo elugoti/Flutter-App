@@ -1,5 +1,6 @@
 import 'package:DeliverMyFood/delivermyfood/models/City.dart';
 import 'package:DeliverMyFood/delivermyfood/models/Venue.dart';
+import 'package:DeliverMyFood/themes/light_color.dart';
 import 'package:DeliverMyFood/weatherapp/Utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +60,7 @@ class _SearchVenuePageState extends State<SearchVenuePage> {
     return new Scaffold(
       appBar: new AppBar(
         backgroundColor: Color(0xffCB202D),
-        title: new Text(widget.city.title),
+        title: new Text(widget.city.title,style: TextStyle(color: LightColor.white),),
       ),
       body: Container(
         child: Column(

@@ -9,8 +9,12 @@ import 'package:DeliverMyFood/delivermyfood/ui/SearchVenuePage.dart';
 import 'package:DeliverMyFood/model/Post.dart';
 import 'package:DeliverMyFood/model/RestuarantResp.dart';
 import 'package:DeliverMyFood/model/ReviewsResponse.dart';
+import 'package:DeliverMyFood/model/data.dart';
+import 'package:DeliverMyFood/themes/theme.dart';
 import 'package:DeliverMyFood/ui/ListViewDialog.dart';
 import 'package:DeliverMyFood/ui/ListViews.dart';
+import 'package:DeliverMyFood/ui/ShoppingCartPage.dart';
+import 'package:DeliverMyFood/ui/widgets/product_icon.dart';
 import 'package:DeliverMyFood/weatherapp/UI/RestaurantDetailPage.dart';
 import 'package:DeliverMyFood/weatherapp/Utils/Utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,11 +31,15 @@ class _RestaurantListScreenState extends State<HomePage> implements OnItemSelect
   Future<RestaurantResp> data;
   List<String> name = new List();
   List<int> colors = new List();
+  String checkoutText = "Checkout";
+  int count = 0;
+  var fList = foodItemListType;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    Utils.restaurantList = List();
     //venueName = Utils.selectedVenue;
     data = getData();
   }
@@ -40,37 +48,6 @@ class _RestaurantListScreenState extends State<HomePage> implements OnItemSelect
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xffCB202D),
-        leading: new IconButton(
-          icon: new Icon(Icons.my_location),
-          onPressed: () {},
-        ),
-        title: Text(
-          Utils.selectedVenue,
-          style: (TextStyle(fontSize: 14)),
-        ),
-        actions: <Widget>[
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 0, top: 0, right: 20, bottom: 0),
-            child: IconButton(
-              icon: const Icon(Icons.edit),
-              tooltip: 'Show Snackbar',
-              onPressed: () {
-                if (Utils.city != null) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            SearchVenuePage(city: Utils.city)),
-                  );
-                }
-              },
-            ),
-          ),
-        ],
-      ),
       body: Center(
         child: Container(
           child: FutureBuilder(
@@ -83,6 +60,19 @@ class _RestaurantListScreenState extends State<HomePage> implements OnItemSelect
                 }
               }),
         ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          if(count==0){
+            final snackBar = SnackBar(content: Text('Add atleast one item'));
+            Scaffold.of(context).showSnackBar(snackBar);
+          }else{
+            openCheckoutPage();
+          }
+        },
+        label: Text(checkoutText),
+        icon: Icon(Icons.shopping_cart),
+        backgroundColor: Colors.blue,
       ),
     );
   }
@@ -99,68 +89,105 @@ class _RestaurantListScreenState extends State<HomePage> implements OnItemSelect
 
   Widget showListViewData(BuildContext context, List<Restaurants> snapshot) {
     return Container(
-      child: ListView.builder(
-          itemCount: snapshot.length,
-          itemBuilder: (context, int positon) {
-            String nm = "➕ ADD";
-            int color = 0xffCB202D;
-            name.add(nm);
-            colors.add(color);
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Divider(height: 5.0),
-                ListTile(
-                    onTap: () {
-                      fetchMenu(snapshot[positon]);
-                    },
-                    leading: Column(
-                      children: <Widget>[
-                        Image.network("${snapshot[positon].restaurant.thumb}",
-                            width: 50, height: 50),
-                      ],
-                    ),
-                    title: Text("${snapshot[positon].restaurant.name}"),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.only(top: 8, bottom: 8),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text("🍚 ${snapshot[positon].restaurant.cuisines}",
-                              style:
+      height: MediaQuery.of(context).size.height,
+      child: ListView(
+        children: <Widget>[
+          _categoryWidget(),
+          ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: snapshot.length,
+              itemBuilder: (context, int positon) {
+                String nm = "➕ ADD";
+                int color = 0xffCB202D;
+                name.add(nm);
+                colors.add(color);
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Divider(height: 5.0),
+                    ListTile(
+                        onTap: () {
+                          fetchMenu(snapshot[positon]);
+                        },
+                        leading: Column(
+                          children: <Widget>[
+                            Image.network("${snapshot[positon].restaurant.thumb}",
+                                width: 50, height: 50),
+                          ],
+                        ),
+                        title: Text("${snapshot[positon].restaurant.name}"),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 8, bottom: 8),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text("🍚 ${snapshot[positon].restaurant.cuisines}",
+                                  style:
                                   TextStyle(color: Colors.grey, fontSize: 12),
-                              overflow: TextOverflow.ellipsis),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8, bottom: 8),
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  FontAwesomeIcons.dollarSign,
-                                  size: 14,
-                                  color: Colors.blue,
+                                  overflow: TextOverflow.ellipsis),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8, bottom: 8),
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      FontAwesomeIcons.dollarSign,
+                                      size: 14,
+                                      color: Colors.blue,
+                                    ),
+                                    Text(
+                                        "Cost for two \$${snapshot[positon].restaurant.averageCostForTwo}")
+                                  ],
                                 ),
-                                Text(
-                                    "Cost for two \$${snapshot[positon].restaurant.averageCostForTwo}")
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    trailing: Container(
-                      width: 100,
-                      child: FlatButton(
-                        onPressed: () => showTypeSelection(positon),
-                        child: Text(name[positon]),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                            side: BorderSide(color: Color(colors[positon]))),
-                      ),
-                    )),
-              ],
-            );
-          }),
+                              )
+                            ],
+                          ),
+                        ),
+                        trailing: Container(
+                          width: 100,
+                          child: FlatButton(
+                            onPressed: () => showTypeSelection(positon,snapshot[positon].restaurant),
+                            child: Text(name[positon],style: TextStyle(fontSize: 14),),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                                side: BorderSide(color: Color(colors[positon]))),
+                          ),
+                        )),
+                  ],
+                );
+              })
+        ],
+      ),
+    );
+  }
+
+
+  Widget _categoryWidget() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      width: AppTheme.fullWidth(context),
+      height: 80,
+      child: ListView(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        children: AppData.categoryList
+            .map(
+              (category) => ProductIcon(
+            model: category,
+            onSelected: (model) {
+              setState(() {
+                AppData.categoryList.forEach((item) {
+                  item.isSelected = false;
+                });
+                model.isSelected = true;
+              });
+            },
+          ),
+        )
+            .toList(),
+      ),
     );
   }
 
@@ -218,24 +245,13 @@ class _RestaurantListScreenState extends State<HomePage> implements OnItemSelect
     );
   }
 
-  showTypeSelection(int position) {
+  showTypeSelection(int position,Restaurant restaurant) {
     setState(() {
       //name.insert(positon, element)
       name[position] = "✔ Added";
       colors[position] = 0xff0080ff;
     });
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              'Select one',
-              style: TextStyle(color: Colors.redAccent, fontSize: 14),
-            ),
-            content: Container(
-                 child: FoodItemTypeSelectPage().showTypeDialog(this,position,context),
-          ));
-        });
+    return showTypeDialog(position,restaurant);
   }
 
   @override
@@ -244,6 +260,70 @@ class _RestaurantListScreenState extends State<HomePage> implements OnItemSelect
      setState(() {
        Utils.selectedFoodType = foodItemType.index;
      });
+  }
+
+  showTypeDialog(int position,Restaurant restaurant) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        int value = 1;
+        int tempCount = 0;
+        return AlertDialog(
+          title: Text("Select option"),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Container(
+                height: 240,
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                        child: Container(
+                          child: Column(
+                            children:
+                            fList.map((data) => RadioListTile(
+                              title: Text("${data.name}"),
+                              groupValue: value,
+                              value: data.index,
+                              onChanged: (val) {
+                                setState(() {
+                                  debugPrint("printValue: "+data.index.toString());
+                                  value = data.index;
+                                });
+                                //Navigator.pop(context);
+                              },
+                            )).toList(),
+                          ),
+                        )),
+                  ],
+                ),
+              );
+            },
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            FlatButton(
+              child: new Text("DONE"),
+              onPressed: () {
+                setState(() {
+                  count++;
+                  Utils.restaurantList.add(restaurant);
+                  checkoutText = "Checkout"+" ("+count.toString()+")";
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void openCheckoutPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ShoppingCartPage()),
+    );
   }
 }
 

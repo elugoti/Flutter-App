@@ -280,6 +280,31 @@ class Network {
     }
   }
 
+  showTypeDialog(int position, Restaurant restaurant) {
+    showDialog<void>(
+        builder: (BuildContext context) {
+          int selectedRadio = 0;
+          return AlertDialog(
+            content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return Column(
+                  children: List<Widget>.generate(4, (int index) {
+                    return Radio<int>(
+                      value: index,
+                      groupValue: selectedRadio,
+                      onChanged: (int value) {
+                        setState(() => selectedRadio = value);
+                      },
+                    );
+                  }),
+                );
+              },
+            ),
+          );
+        });
+  }
+
+
   Map<String, String> get headers => {
         "Content-Type": "application/json",
         "Accept": "application/json",

@@ -1,4 +1,5 @@
 import 'package:DeliverMyFood/delivermyfood/models/City.dart';
+import 'package:DeliverMyFood/model/RestuarantResp.dart';
 import 'package:intl/intl.dart';
 
 class Utils{
@@ -8,6 +9,7 @@ class Utils{
   static String selectedVenue = "Select Venue";
   static City city ;
   static int selectedFoodType = 1;
+  static List<Restaurant> restaurantList = new List();
 
 
   static String getDate(DateTime dateTime){
