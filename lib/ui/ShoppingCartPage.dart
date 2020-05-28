@@ -1,3 +1,4 @@
+import 'package:DeliverMyFood/auth/authMain.dart';
 import 'package:DeliverMyFood/model/RestuarantResp.dart';
 import 'package:DeliverMyFood/model/data.dart';
 import 'package:DeliverMyFood/model/product.dart';
@@ -175,7 +176,7 @@ class ShoppingCartPage extends StatelessWidget {
             {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
+                MaterialPageRoute(builder: (context) => AuthMain()),
               )
             }
           else
