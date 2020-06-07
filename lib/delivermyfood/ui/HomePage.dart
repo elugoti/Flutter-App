@@ -10,6 +10,7 @@ import 'package:DeliverMyFood/model/Post.dart';
 import 'package:DeliverMyFood/model/RestuarantResp.dart';
 import 'package:DeliverMyFood/model/ReviewsResponse.dart';
 import 'package:DeliverMyFood/model/data.dart';
+import 'package:DeliverMyFood/push_notifications.dart';
 import 'package:DeliverMyFood/themes/theme.dart';
 import 'package:DeliverMyFood/ui/ListViewDialog.dart';
 import 'package:DeliverMyFood/ui/ListViews.dart';
@@ -42,6 +43,7 @@ class _RestaurantListScreenState extends State<HomePage> implements OnItemSelect
     Utils.restaurantList = List();
     //venueName = Utils.selectedVenue;
     data = getData();
+    PushNotificationsManager().init();
   }
 
 

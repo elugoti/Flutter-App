@@ -1,3 +1,5 @@
+import 'package:DeliverMyFood/delivermyfood/myorders/OrderHistory.dart';
+import 'package:DeliverMyFood/delivermyfood/ordertracking/TrackOrder.dart';
 import 'package:DeliverMyFood/delivermyfood/ui/HomePage.dart';
 import 'package:DeliverMyFood/themes/light_color.dart';
 import 'package:DeliverMyFood/themes/theme.dart';
@@ -5,9 +7,6 @@ import 'package:DeliverMyFood/ui/widgets/BottomNavigationBar/bottom_navigation_b
 import 'package:DeliverMyFood/ui/widgets/title_text.dart';
 import 'package:DeliverMyFood/ui/widgets/extentions.dart';
 import 'package:flutter/material.dart';
-
-import 'MyHomePage.dart';
-import 'ShoppingCartPage.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({Key key, this.title}) : super(key: key);
@@ -20,6 +19,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   bool isHomePageSelected = true;
+
   Widget _appBar() {
     return Container(
       padding: AppTheme.padding,
@@ -88,12 +88,13 @@ class _MainPageState extends State<MainPage> {
             Spacer(),
             !isHomePageSelected
                 ? Container(
-              padding: EdgeInsets.all(10),
-              child: Icon(
-                Icons.delete_outline,
-                color: LightColor.orange,
-              ),
-            ).ripple(() {}, borderRadius: BorderRadius.all(Radius.circular(13)))
+                    padding: EdgeInsets.all(10),
+                    child: Icon(
+                      Icons.delete_outline,
+                      color: LightColor.orange,
+                    ),
+                  ).ripple(() {},
+                    borderRadius: BorderRadius.all(Radius.circular(13)))
                 : SizedBox()
           ],
         ));
@@ -139,12 +140,10 @@ class _MainPageState extends State<MainPage> {
                         duration: Duration(milliseconds: 300),
                         switchInCurve: Curves.easeInToLinear,
                         switchOutCurve: Curves.easeOutBack,
-                        child: isHomePageSelected
-                            ? HomePage()
-                            : Align(
-                          alignment: Alignment.topCenter,
-                          child: ShoppingCartPage(),
-                        ),
+                        child: isHomePageSelected ? HomePage() : Align(
+                                alignment: Alignment.topCenter,
+                                child: Oder_History(),
+                              ),
                       ),
                     )
                   ],

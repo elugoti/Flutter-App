@@ -29,6 +29,7 @@ dependencies:
   shared_preferences: ^0.5.7+1
   flutter_appauth: ^0.8.3
   google_fonts: ^0.3.9
+  firebase_messaging: ^6.0.16
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +60,13 @@ flutter:
     - images/lucknow.png
     - images/mumbai.png
     - images/vizag.png
+    - assets/images/
+    - assets/images/Ober.png
+    - assets/images/Pan.png
+    - assets/images/FoodPackage.png
+    - assets/images/icon_direction.png
+    - assets/images/call_cook.png
+    - assets/images/history.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

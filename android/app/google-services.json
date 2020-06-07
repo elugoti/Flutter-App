@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "468949680688",
+    "firebase_url": "https://flutterapp-9d1df.firebaseio.com",
+    "project_id": "flutterapp-9d1df",
+    "storage_bucket": "flutterapp-9d1df.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:468949680688:android:421ce8781ae6bbf133a3f5",
+        "android_client_info": {
+          "package_name": "com.example.DeliverMyFood"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "468949680688-2qjt5qf84n5ccqoc5jq7fq828bfu3baq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVfQ9vHgzXLwcp7uv3oE_-P2wcg-aZpS4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "468949680688-2qjt5qf84n5ccqoc5jq7fq828bfu3baq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "468949680688-dfg1i4fecpv2dsrjqb71v35nsaeap0kr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.DeliverMyFood"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
